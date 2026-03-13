@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "total_passages": 3,
+  "passages": [
+    {
+      "id": 0,
+      "text": "Welcome to BhaVi.ai! I am an AI built on Neural Field Intelligence — a new architecture that thinks in continuous fields, not tokens. To teach me knowledge, run: python3 learn.py on your local machine, then python3 export_knowledge.py, then push to GitHub.",
+      "source": "system",
+      "math": false,
+      "importance": 1.0,
+      "encoding": []
+    },
+    {
+      "id": 1,
+      "text": "BhaVi stands for a five-layer neural architecture: Frozen Core Field (immutable roots), Observer Core (three-zone memory), Curiosity Engine (self-improvement), Superposition Cloud (multiple interpretations), and Collapse Decision (late-binding answers). It runs with only 5 million parameters.",
+      "source": "system",
+      "math": false,
+      "importance": 1.0,
+      "encoding": []
+    },
+    {
+      "id": 2,
+      "text": "To add knowledge: run python3 learn.py to feed BhaVi books or text, then python3 export_knowledge.py to export, then git push. The site updates automatically with new knowledge from the docs/bhavi_knowledge.json file.",
+      "source": "system",
+      "math": false,
+      "importance": 1.0,
+      "encoding": []
+    }
+  ]
+}
