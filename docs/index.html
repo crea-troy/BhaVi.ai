@@ -664,7 +664,7 @@ async function init() {
   setLoadStatus("Loading neural field knowledge...");
 
   try {
-    const res  = await fetch("docs/bhavi_knowledge.json");
+    const res  = await fetch("bhavi_knowledge.json");
     const data = await res.json();
     knowledge  = data.passages || [];
 
