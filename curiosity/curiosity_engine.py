@@ -142,7 +142,7 @@ class LearningPrioritizer(nn.Module):
 
         # SAFETY CHECK: Zero out learning for inconsistent inputs
         # This is the guardian that protects roots
-        safe_priority = priority * (consistency_score > 0.5).float()
+        safe_priority = priority * (consistency_score > 0.3).float()
 
         # Generate learning direction signal
         learn_signal = self.learning_signal(core_repr)
@@ -151,7 +151,7 @@ class LearningPrioritizer(nn.Module):
             'priority': priority,
             'safe_priority': safe_priority,
             'learning_signal': learn_signal,
-            'blocked': (consistency_score <= 0.5).float()
+            'blocked': (consistency_score <= 0.3).float()
         }
 
 

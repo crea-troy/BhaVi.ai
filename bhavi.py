@@ -168,11 +168,15 @@ class BhaVi(nn.Module):
         core_repr = core_output['core_representation']
 
         # ── Consistency Check ──────────────────────────────────────
-        # Check if input is consistent with frozen roots
-        consistency = self.frozen_core.core.check_consistency(
-            core_repr,
-            core_repr  # Check against itself in field space
-        )
+        # If core is not yet frozen: allow ALL learning (no blocking)
+        # If core is frozen: check consistency against roots
+        if self.frozen_core.core.is_frozen():
+            consistency = self.frozen_core.core.check_consistency(
+                core_repr, core_repr
+            )
+        else:
+            # Core not frozen yet — trust everything, learn freely
+            consistency = torch.ones(core_repr.shape[0], 1)
         core_output['consistency_score'] = consistency
 
         # ── Layer 3: Observer Core ─────────────────────────────────

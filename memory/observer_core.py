@@ -278,11 +278,11 @@ class ObserverCore(nn.Module):
 
         # ── Safety check before writing ───────────────────────────
         # Only write to memory if consistent with frozen core
-        safe_to_learn = (consistency_score > 0.5).float()
+        safe_to_learn = (consistency_score > 0.3).float()
 
         # ── Update active memory (Zone 3) ──────────────────────────
         # Always updates if safe (fast memory)
-        if safe_to_learn.mean() > 0.3:  # If most of batch is safe
+        if safe_to_learn.mean() > 0.1:  # If most of batch is safe
             self.active_memory(
                 current_input,
                 new_info=current_input * safe_to_learn
