@@ -79,6 +79,26 @@ class BhaViChat:
         # Knowledge store — stores passages for retrieval
         self.store = KnowledgeStore(store_path="bhavi_knowledge")
 
+        # Field Decoder — generates answers in BhaVi's own words
+        self.decoder = None
+        decoder_path = os.path.join(_HERE, "bhavi_decoder_best.pt")
+        if not os.path.exists(decoder_path):
+            decoder_path = os.path.join(_HERE, "bhavi_decoder.pt")
+        if os.path.exists(decoder_path):
+            try:
+                _dec_mod     = _load("decoder/field_decoder.py", "field_decoder")
+                FieldDecoder  = _dec_mod.FieldDecoder
+                self.decoder = FieldDecoder(field_dim=256, hidden_dim=512, seed_seq_len=32)
+                ckpt = torch.load(decoder_path, map_location='cpu', weights_only=True)
+                self.decoder.load_state_dict(ckpt['model_state'])
+                self.decoder.eval()
+                print(f"[Chat] Field Decoder loaded ✅ ({decoder_path})")
+            except Exception as e:
+                print(f"[Chat] Decoder not loaded: {e}")
+                self.decoder = None
+        else:
+            print(f"[Chat] No decoder yet — run python3 train_decoder.py to enable generation")
+
         print(f"\n[Chat] Knowledge base: {len(self.store)} passages stored")
         print(f"[Chat] Ready.\n")
 
@@ -178,7 +198,38 @@ class BhaViChat:
         if not results:
             return "I could not find relevant knowledge for this question."
 
-        # Build answer
+        # ── Use Field Decoder if available ───────────────────────
+        if self.decoder is not None and results and results[0]['similarity'] > 0.1:
+            try:
+                with torch.no_grad():
+                    # Build context field by averaging top results
+                    ctx_vecs = [r['encoding'] for r in results if 'encoding' in r]
+                    if ctx_vecs:
+                        ctx_field = torch.stack(ctx_vecs).mean(0).unsqueeze(0)
+                    else:
+                        ctx_field = q_encoding.unsqueeze(0)
+
+                    generated = self.decoder.generate(
+                        question_field = q_encoding.unsqueeze(0),
+                        context_field  = ctx_field,
+                        max_chars      = 400,
+                        temperature    = 0.7
+                    )
+
+                    if generated and len(generated) > 20:
+                        confidence = output['confidence'].mean().item()
+                        answer  = f"\n{'─'*55}\n"
+                        answer += f"🧠 BhaVi\n"
+                        answer += f"{'─'*55}\n\n"
+                        answer += generated + "\n\n"
+                        answer += f"{'─'*55}\n"
+                        answer += f"Confidence: {confidence:.1%} | "
+                        answer += f"Knowledge: {len(self.store)} passages\n"
+                        return answer
+            except Exception as e:
+                pass  # fall through to retrieval mode
+
+        # Build answer (retrieval mode — used before decoder is trained)
         confidence   = output['confidence'].mean().item()
         epistemic    = output['epistemic_uncertainty'].mean().item()
         mem_conf     = output['memory_confidence'].mean().item()
