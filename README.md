@@ -2,10 +2,41 @@
 
 An original AI architecture that thinks in **continuous fields**, not tokens.
 
-- No transformers. No tokenization.
-- Self-improving with protected roots.
-- Runs locally on any machine (~50M params, 18MB).
-- Deploys to GitHub Pages with zero server cost.
+Created by **Jigar Patel** — researcher at the intersection of particle physics and AI.
+
+🌐 **Live:** [crea-troy.github.io/BhaVi.ai](https://crea-troy.github.io/BhaVi.ai)
+
+---
+
+## What Is BhaVi
+
+BhaVi is not a standard AI. It does not predict tokens or copy patterns from the internet.
+
+Instead:
+- Knowledge is encoded as **continuous field waves** ψ(x) — like how physics stores reality as field equations
+- Thinking happens as **field evolution**: ∂ψ/∂t = −∇E(ψ) — the field settles into the answer
+- Answers are **derived**, not retrieved
+- Knowledge **compresses** into deeper equations over time — like F=ma describing infinite situations
+- The model **grows** with every conversation and never needs full retraining
+
+> Like E=mc² — one equation describes infinite situations. BhaVi stores knowledge the same way.
+
+---
+
+## Architecture
+
+| Layer | Name | Purpose |
+|-------|------|---------|
+| 1 | Frozen Core | Immutable roots — uncertainty split (aleatoric + epistemic) |
+| 2 | Field Wave System | Byte-level encoding — no tokenizer, no vocabulary |
+| 3 | Causal Field Graph | Derives A→B→C connections never explicitly seen |
+| 4 | Observer Memory | Three-zone memory: Active → Consolidated → Permanent |
+| 5 | Curiosity Engine | Detects knowledge gaps, drives self-improvement |
+| 6 | Superposition Cloud | Holds 8 hypotheses simultaneously |
+| 7 | Response System | Field thinks, simple rules speak |
+| 8 | Self-Evolution Engine | Compresses knowledge into deeper field equations |
+
+**~5 million parameters** — runs on any laptop, no GPU needed.
 
 ---
 
@@ -13,108 +44,116 @@ An original AI architecture that thinks in **continuous fields**, not tokens.
 
 ```
 BhaVi.ai/
-├── docs/                    ← GitHub Pages serves this
-│   ├── index.html           ← The chat web interface
-│   └── bhavi_knowledge.json ← Generated after training (git push this)
-│
-├── core/frozen_core.py      ← Layer 1: Immutable roots
-├── memory/observer_core.py  ← Layer 3: Three-zone memory
-├── curiosity/               ← Layer 4: Self-improvement engine
-├── superposition/           ← Layer 5+6: Multi-hypothesis + decision
-├── encoder/                 ← Universal input encoder (text/PDF/equations)
-│
-├── bhavi.py                 ← Complete BhaVi model
-├── main.py                  ← Test BhaVi works
-├── learn.py                 ← Feed knowledge to BhaVi
-├── chat.py                  ← Local terminal chat
-├── export_knowledge.py      ← Export learned knowledge → docs/
-└── setup.sh                 ← Install dependencies
+├── bhavi_unified.py      ← complete brain (all 8 layers)
+├── bhavi_chat.py         ← chat interface (run this)
+├── bhavi_train.py        ← training script
+├── learn.py              ← feed new knowledge
+├── export_knowledge.py   ← export to website
+├── general_knowledge.txt ← seed knowledge
+├── setup.sh              ← install dependencies
+├── encoder/              ← file reading tools (PDF, TXT, etc)
+└── docs/                 ← GitHub Pages website
+    ├── index.html
+    └── bhavi_knowledge.json
 ```
 
 ---
 
 ## Quick Start
 
-### Step 1 — Install dependencies
+### 1 — Install dependencies
 ```bash
 bash setup.sh
 ```
 
-### Step 2 — Test BhaVi runs
+### 2 — Train on existing knowledge
 ```bash
-python3 main.py
+conda activate AI
+python3 bhavi_train.py
 ```
 
-### Step 3 — Feed BhaVi knowledge
+### 3 — Chat with BhaVi
 ```bash
-# Built-in physics demo
-python3 learn.py
+python3 bhavi_chat.py
+```
 
-# Your own book or PDF
+### 4 — Feed new knowledge (any PDF or TXT)
+```bash
+# Inside chat
+You: /feed /path/to/book.pdf
+
+# Or directly
 python3 learn.py /path/to/book.pdf
-python3 learn.py /path/to/notes.txt
 ```
 
-### Step 4 — Chat locally
-```bash
-python3 chat.py
-```
-
-### Step 5 — Export to web
+### 5 — Update the website
 ```bash
 python3 export_knowledge.py
-```
-
-### Step 6 — Push to GitHub
-```bash
 git add docs/bhavi_knowledge.json
-git commit -m "Update BhaVi knowledge"
-git push
-```
-
-### Step 7 — Enable GitHub Pages
-Go to your repo → **Settings** → **Pages**
-→ Source: `main` branch, `/docs` folder → **Save**
-
-Your site is live at: `https://crea-troy.github.io/BhaVi.ai`
-
----
-
-## How It Works
-
-```
-Local (Python)                    Web (Browser)
-──────────────                    ─────────────
-BhaVi reads your books            Loads bhavi_knowledge.json
-Neural field encoding             JS cosine similarity search
-Saves to knowledge store          Returns ranked results
-Export to docs/                   Shows confidence + uncertainty
-git push → GitHub Pages           No server needed ever
+git commit -m "Knowledge update"
+git push origin main
 ```
 
 ---
 
-## BhaVi Architecture
+## Chat Commands
 
-| Layer | Name | Function |
-|---|---|---|
-| 1 | Frozen Core Field | Immutable roots, uncertainty split |
-| 2 | Superposition Cloud | Holds multiple interpretations |
-| 3 | Observer Core | Three-zone persistent memory |
-| 4 | Curiosity Engine | Gap detection, self-improvement |
-| 5 | Collapse Decision | Late-binding answer resolution |
+| Command | What it does |
+|---------|-------------|
+| Ask anything | BhaVi searches its field and derives an answer |
+| `/feed <file>` | Learn from any PDF, TXT, or MD file |
+| `/improve` | Compress knowledge into deeper field equations |
+| `/status` | Show knowledge count, memory updates, improvements |
+| `/freeze` | Permanently freeze core roots |
+| `/quit` | Save and exit |
 
 ---
 
-## Key Properties
+## What Files NOT to Commit
 
-- **~5M parameters** — tiny but architecturally intelligent
-- **18MB RAM** — runs on phone, laptop, Raspberry Pi
-- **Persistent memory** — remembers across sessions
-- **Root protection** — core knowledge cannot be corrupted
-- **No tokenization** — processes raw bytes as continuous field
+These are generated locally — never push to GitHub:
+
+```
+*.pt                        ← model weights (too large, regenerated by training)
+bhavi_knowledge_entries.json ← regenerated by learn.py
+bhavi_knowledge_encodings.pt ← regenerated by training
+```
+
+Only push `docs/bhavi_knowledge.json` to update the website.
+
+---
+
+## How BhaVi Differs From GPT/Claude
+
+| Property | GPT / Claude | BhaVi |
+|----------|-------------|-------|
+| Input encoding | Tokenizer — vocabulary limited | Raw bytes → field waves |
+| Knowledge storage | Billions of tokens frozen in weights | Continuous field equations |
+| How it answers | Predicts statistically likely text | Field evolves and settles into answer |
+| Learning | Frozen after training | Continuous — never stops |
+| Parameters | 7B – 1T+ | ~5M |
+| Hardware | Hundreds of GPUs | Any laptop |
+| Self-improvement | Needs full retraining | Compresses own knowledge automatically |
+
+---
+
+## Training Data
+
+BhaVi currently knows:
+- **Feynman Lectures on Physics** — Vol I, II, III (2,731 passages)
+- **General knowledge** — science, math, history, philosophy, AI (42 passages)
+
+Best data to add next:
+- Einstein's papers on relativity
+- Friston's Free Energy Principle papers
+- Any physics, mathematics, or consciousness research (PDF or TXT)
 
 ---
 
 ## License
-MIT
+
+MIT — see LICENSE file.
+
+---
+
+*BhaVi is not finished. It is growing. That is the point.*
